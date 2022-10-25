@@ -11,11 +11,15 @@ const BlogSchema = new Schema(
         },
         Description: { type: String },
         Author: { type: String },
-        State: { type: String },
+        State: { type: String, enum: [' draft', ' published'] },
         Read_Count: { type: Number },
         Reading_Time: { type: Date },
         Tags: { type: String },
         Body: { type: String, require: true },
+        owner: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'USERS',
+        },
     },
     { timestamps: true }
 );
