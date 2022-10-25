@@ -49,33 +49,33 @@ passport.use(
 );
 
 // login middleware
-passport.use(
-    'login',
-    new LocalStrategy(
-        {
-            usernameField: 'email',
-            passwordField: 'password',
-        },
-        async (email, password, next) => {
-            try {
-                const user = await UserModel.findOne({ Email: email });
-                if (!user) {
-                    return next(null, false, {
-                        message: 'User not found pls register...',
-                    });
-                }
-                const validate = await user.validatePassword(password);
-                if (!validate) {
-                    return next(null, false, {
-                        message: 'Invalid User Password...',
-                    });
-                }
-                return next(null, user, {
-                    message: 'Logged in Successfully...',
-                });
-            } catch (error) {
-                next(error.message);
-            }
-        }
-    )
-);
+// passport.use(
+//     'login',
+//     new LocalStrategy(
+//         {
+//             usernameField: 'email',
+//             passwordField: 'password',
+//         },
+//         async (email, password, next) => {
+//             try {
+//                 const user = await UserModel.findOne({ Email: email });
+//                 if (!user) {
+//                     return next(null, false, {
+//                         message: 'User not found pls register...',
+//                     });
+//                 }
+//                 const validate = await user.validatePassword(password);
+//                 if (!validate) {
+//                     return next(null, false, {
+//                         message: 'Invalid User Password...',
+//                     });
+//                 }
+//                 return next(null, user, {
+//                     message: 'Logged in Successfully...',
+//                 });
+//             } catch (error) {
+//                 next(error.message);
+//             }
+//         }
+//     )
+// );

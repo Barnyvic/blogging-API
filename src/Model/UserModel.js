@@ -31,10 +31,12 @@ const UserSchema = new Shema(
     },
     { timestamps: true }
 );
-UserSchema.pre('save', async () => {
+UserSchema.pre('save', async function (next) {
     const user = this;
     const hash = await bcrypt.hash(user.Password, 10);
+
     this.Password = hash;
+    next();
 });
 
 UserSchema.method.validatePassword = async (password) => {
