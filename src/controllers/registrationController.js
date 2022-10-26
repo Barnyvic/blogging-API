@@ -1,6 +1,7 @@
 const UserModel = require('../Model/UserModel');
 const Jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+require('dotenv').config();
 
 const registerUser = async (req, res) => {
     const { email, password, firstname, lastname, username, confirmPassword } =
@@ -64,11 +65,15 @@ const loginUser = async (req, res) => {
             }
             let payload = { id: User._id };
             const token = Jwt.sign(payload, process.env.JWT_SECRET, {
-                expiresIn: '2h',
+                expiresIn: '1h',
             });
 
-            // req.session.token = token;
-            res.send(token);
+            return res
+                .cookie('token', token, {
+                    httpOnly: true,
+                })
+                .status(200)
+                .send({ message: 'Login successful' });
         }
     } catch (error) {
         console.log(error);
