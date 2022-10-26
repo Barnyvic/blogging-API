@@ -6,7 +6,7 @@ require('dotenv').config();
 
 // Importing Routes, authenticate and Database
 const dbConnection = require('./database/dbConfig');
-const UserRouter = require('./routes/usersRoute');
+const RegisterRouter = require('./routes/RegisterRoute');
 require('./authenticate/authenticate');
 
 const Port = process.env.PORT || 4005;
@@ -19,7 +19,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(passport.initialize());
 
 // middleware for the Routes
-app.use('/auth', UserRouter);
+app.use('/', RegisterRouter);
 
 app.listen(Port, () => {
     console.log(`Application running on ${Port}`);
