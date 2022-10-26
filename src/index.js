@@ -1,25 +1,24 @@
 /* eslint-disable indent */
 // importing dependencies
 const express = require('express');
-const passport = require('passport');
 require('dotenv').config();
 
 // Importing Routes, authenticate and Database
 const dbConnection = require('./database/dbConfig');
-const RegisterRouter = require('./routes/RegisterRoute');
-require('./authenticate/authenticate');
+const registerationRoute = require('./routes/RegisterRoute');
 
 const Port = process.env.PORT || 4005;
 
 const app = express();
 dbConnection();
 
+app.set('view engine', 'ejs');
+
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(passport.initialize());
+app.use(express.urlencoded({ extended: false }));
 
 // middleware for the Routes
-app.use('/', RegisterRouter);
+app.use('/', registerationRoute);
 
 app.listen(Port, () => {
     console.log(`Application running on ${Port}`);

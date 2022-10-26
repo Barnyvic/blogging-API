@@ -1,17 +1,7 @@
 const express = require('express');
-const passport = require('passport');
+const registerationRoute = express.Router();
+const { registerUser } = require('../controllers/registrationController');
 
-// importing the user Controller
-const { signUpUser, signInUser } = require('../controllers/RegisterController');
+registerationRoute.post('/signup', registerUser);
 
-const RegisterRouter = express.Router();
-
-RegisterRouter.post(
-    '/signup',
-    passport.authenticate('signup', { session: false }),
-    signUpUser
-);
-
-RegisterRouter.post('/signin', signInUser);
-
-module.exports = RegisterRouter;
+module.exports = registerationRoute;

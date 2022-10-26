@@ -23,6 +23,11 @@ const UserSchema = new Shema(
                 'Please add a valid E-mail',
             ],
         },
+        Username: {
+            type: String,
+            unique: true,
+            require: true,
+        },
         Password: {
             type: String,
             required: true,
