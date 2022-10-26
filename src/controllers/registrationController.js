@@ -1,4 +1,6 @@
 const UserModel = require('../Model/UserModel');
+const Jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 
 const registerUser = async (req, res) => {
     const { email, password, firstname, lastname, username, confirmPassword } =
@@ -36,4 +38,41 @@ const registerUser = async (req, res) => {
     }
 };
 
-module.exports = { registerUser };
+const loginUser = async (req, res) => {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+        return res
+            .status(500)
+            .send({ message: 'Pls Complete the required fields' });
+    }
+
+    try {
+        const User = await UserModel.findOne({ Email: email });
+
+        if (!User) {
+            return res.status(409).send({ message: 'User not found' });
+        }
+
+        if (User) {
+            const validatePassword = await bcrypt.compare(
+                password,
+                User.Password
+            );
+            if (!validatePassword) {
+                return res.status(500).send({ message: 'Invalid password' });
+            }
+            let payload = { id: User._id };
+            const token = Jwt.sign(payload, process.env.JWT_SECRET, {
+                expiresIn: '2h',
+            });
+
+            // req.session.token = token;
+            res.send(token);
+        }
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+module.exports = { registerUser, loginUser };

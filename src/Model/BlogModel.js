@@ -11,9 +11,9 @@ const BlogSchema = new Schema(
         },
         Description: { type: String },
         Author: { type: String },
-        State: { type: String, enum: [' draft', ' published'] },
+        State: { type: String, default: 'draft', enum: ['draft', 'published'] },
         Read_Count: { type: Number },
-        Reading_Time: { type: Date },
+        Reading_Time: { type: Number },
         Tags: { type: String },
         Body: { type: String, require: true },
         owner: {

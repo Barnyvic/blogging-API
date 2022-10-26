@@ -8,16 +8,16 @@ const UserSchema = new Shema(
     {
         First_Name: {
             type: String,
-            required: true,
+            required: 'First Name is required',
         },
         Last_Name: {
             type: String,
-            required: true,
+            required: 'Last Name is required',
         },
         Email: {
             type: String,
             unique: true,
-            require: true,
+            required: 'Email is required',
             match: [
                 /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
                 'Please add a valid E-mail',
@@ -26,11 +26,11 @@ const UserSchema = new Shema(
         Username: {
             type: String,
             unique: true,
-            require: true,
+            required: 'UserName is required',
         },
         Password: {
             type: String,
-            required: true,
+            required: 'Password is required',
             minlength: [6, 'Password must be at least 6 characters long'],
         },
     },
