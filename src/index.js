@@ -1,6 +1,7 @@
 // importing dependencies
 const express = require('express');
 const morgan = require('morgan');
+const cookieParser = require('cookie-parser');
 require('dotenv').config();
 
 // Importing Routes, authenticate,errorMiddleware and Database
@@ -21,6 +22,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use(morgan('dev'));
+app.use(cookieParser());
 
 // middleware for the Routes
 app.use('/', registerationRoute);

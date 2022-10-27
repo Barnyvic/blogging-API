@@ -61,15 +61,14 @@ const loginUser = async (req, res, next) => {
             if (!validatePassword) {
                 return res.status(401).send({ message: 'Invalid password' });
             }
-            let payload = { id: User._id };
-            const token = Jwt.sign(payload, process.env.JWT_SECRET, {
+            // let payload = { id: User._id };
+            const token = Jwt.sign({ id: User._id }, process.env.JWT_SECRET, {
                 expiresIn: '1h',
             });
             // parsing the token to a cookie
-            return res
-                .cookie('token', token, {
-                    httpOnly: true,
-                })
+            res.cookie('accessToken', token, {
+                httpOnly: true,
+            })
                 .status(200)
                 .send({ message: 'Login successful' });
         }

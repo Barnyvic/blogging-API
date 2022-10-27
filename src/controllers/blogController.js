@@ -5,11 +5,22 @@ const createNewblog = async (req, res, next) => {
     const { title, description, author, body, tags } = req.body;
 
     if (!title || !description || !author || !body || !tags) {
-        return res.staus(400).send({ message: 'Fill empty fields' });
+        return res.status(400).send({ message: 'Fill empty fields' });
     }
 
     try {
-    } catch (error) {}
+        const newPost = await blogModel.create({
+            Title: title,
+            Description: description,
+            Author: author,
+            Body: body,
+            Tags: tags,
+        });
+
+        res.staus(201).send({ message: newPost });
+    } catch (error) {
+        next(error.message);
+    }
 };
 
 const getAllBlogs = async (req, res, next) => {};

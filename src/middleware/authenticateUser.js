@@ -3,21 +3,20 @@ const Jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 const authenticate = async (req, res, next) => {
-    const token = req.cookie.token;
+    const token = req.cookies.accessToken;
 
-    // if token doesnt exist
     if (!token)
-        return res.sendStatus(403).send({
+        return res.status(403).send({
             message: 'No token, authorization denied',
         });
 
-    try {
-        // verify token
+    // verify token
+    if (token) {
         const user = Jwt.verify(token, process.env.JWT_SECRET);
-        req.user = await UserModel.findById(user);
+        req.user = await UserModel.findById(user.id);
         next();
-    } catch (error) {
-        res.clearCookie('token');
+    } else {
+        res.clearCookie('accessToken');
         res.status(400).json({ msg: 'Token is not valid' });
     }
 };
