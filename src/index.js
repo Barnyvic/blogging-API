@@ -6,6 +6,7 @@ require('dotenv').config();
 // Importing Routes, authenticate,errorMiddleware and Database
 const { dbConnection } = require('./database/dbConfig');
 const registerationRoute = require('./routes/RegisterRoute');
+const blogRoute = require('./routes/blogRoutes');
 const { errorHandler } = require('./middleware/errorHandler');
 const { authenticate } = require('./middleware/authenticateUser');
 
@@ -24,6 +25,15 @@ app.use(morgan('dev'));
 
 // middleware for the Routes
 app.use('/', registerationRoute);
+app.use('/blog', blogRoute);
+
+// routes not available
+app.all('*', (req, res) => {
+    const err = new Error(`Can't find ${req.originalUrl} on this server!`);
+    err.status = 404;
+    err.statusCode = 404;
+    res.send({ message: err.message });
+});
 
 // handling errrors
 app.use(errorHandler);
