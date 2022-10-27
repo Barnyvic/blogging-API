@@ -30,7 +30,7 @@ const registerUser = async (req, res, next) => {
             Last_Name: lastname,
             Username: username,
         });
-        return res.status(201).send({ message: 'User created successfully' });
+        return res.status(200).send({ message: 'User created successfully' });
     } catch (error) {
         next(error.message);
     }
@@ -61,8 +61,8 @@ const loginUser = async (req, res, next) => {
             if (!validatePassword) {
                 return res.status(401).send({ message: 'Invalid password' });
             }
-            // let payload = { id: User._id };
-            const token = Jwt.sign({ id: User._id }, process.env.JWT_SECRET, {
+            let payload = { id: User._id };
+            const token = Jwt.sign(payload, process.env.JWT_SECRET, {
                 expiresIn: '1h',
             });
             // parsing the token to a cookie

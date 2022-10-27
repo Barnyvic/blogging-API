@@ -4,16 +4,13 @@ const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 require('dotenv').config();
 
-// Importing Routes, authenticate,errorMiddleware and Database
-const { dbConnection } = require('./database/dbConfig');
+// Importing Routes, authenticate anderrorMiddleware
+
 const registerationRoute = require('./routes/RegisterRoute');
 const blogRoute = require('./routes/blogRoutes');
 const { errorHandler } = require('./middleware/errorHandler');
 
-const Port = process.env.PORT || 4005;
-
 const app = express();
-dbConnection();
 
 // setting views engine
 app.set('view engine', 'ejs');
@@ -28,19 +25,12 @@ app.use(cookieParser());
 app.use('/', registerationRoute);
 app.use('/blog', blogRoute);
 
-// routes not available
-app.all('*', (req, res) => {
-    const err = new Error(`Can't find ${req.originalUrl} on this server!`);
-    err.status = 404;
-    err.statusCode = 404;
-    res.send({ message: err.message });
+// routes not found
+app.use('*', (req, res) => {
+    return res.status(404).json({ message: 'route not found' });
 });
 
 // handling errrors
 app.use(errorHandler);
 
-app.listen(Port, () => {
-    console.log(`Application running on ${Port}`);
-});
-
-module.exports = { app };
+module.exports = app;

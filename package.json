@@ -4,15 +4,16 @@
     "description": "A Rest API for a blog",
     "main": "index.js",
     "scripts": {
-        "start": "node ./src/index.js",
-        "dev": "nodemon ./src/index.js",
-        "test": "jest --detectOpenHandles"
+        "start": "cross-env NODE_ENV=production node ./src/app.js",
+        "dev": "cross-env NODE_ENV=development  nodemon ./src/app.js",
+        "test": "cross-env NODE_ENV=test jest --detectOpenHandles"
     },
     "author": "Barny Victor",
     "license": "MIT",
     "dependencies": {
         "bcrypt": "^5.1.0",
         "cookie-parser": "^1.4.6",
+        "cross-env": "^7.0.3",
         "dotenv": "^16.0.3",
         "ejs": "^3.1.8",
         "express": "^4.18.2",

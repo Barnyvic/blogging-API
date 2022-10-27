@@ -2,8 +2,13 @@
 const mongoose = require('mongoose');
 require('dotenv').config();
 
-const dbConnection = async (url) => {
-    mongoose.connect(url || 'mongodb://localhost:27017/blogDatabase');
+const dbConnection = async () => {
+    const mongodbURL =
+        process.env.NODE_ENV === 'test'
+            ? process.env.TEST_MONGODB_URI
+            : process.env.MONGODB_URI;
+
+    mongoose.connect(mongodbURL);
 
     mongoose.connection.on('connected', () => {
         console.log('MONGODB CONNECTED SUCCESSFULLY!...');

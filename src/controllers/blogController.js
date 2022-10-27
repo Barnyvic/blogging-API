@@ -16,10 +16,9 @@ const createNewblog = async (req, res, next) => {
             Body: body,
             Tags: tags,
         });
-
-        res.staus(201).send({ message: newPost });
+        res.status(201).send({ message: newPost });
     } catch (error) {
-        next(error.message);
+        next(error);
     }
 };
 
