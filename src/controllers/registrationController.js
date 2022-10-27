@@ -15,11 +15,11 @@ const registerUser = async (req, res, next) => {
         !username ||
         !confirmPassword
     ) {
-        return res.send({ message: 'Fill empty fields' });
+        return res.staus(400).send({ message: 'Fill empty fields' });
     }
     //   confirming password
     if (password !== confirmPassword) {
-        return res.send({ message: 'PassWord must Match' });
+        return res.status(400).send({ message: 'PassWord must Match' });
     }
     //   saving to database
     try {
@@ -41,7 +41,7 @@ const loginUser = async (req, res, next) => {
 
     if (!email || !password) {
         return res
-            .status(500)
+            .status(400)
             .send({ message: 'Pls Complete the required fields' });
     }
 
@@ -59,7 +59,7 @@ const loginUser = async (req, res, next) => {
                 User.Password
             );
             if (!validatePassword) {
-                return res.status(500).send({ message: 'Invalid password' });
+                return res.status(401).send({ message: 'Invalid password' });
             }
             let payload = { id: User._id };
             const token = Jwt.sign(payload, process.env.JWT_SECRET, {

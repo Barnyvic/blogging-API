@@ -7,7 +7,7 @@ const authenticate = async (req, res, next) => {
 
     // if token doesnt exist
     if (!token)
-        return res.sendStatus(401).send({
+        return res.sendStatus(403).send({
             message: 'No token, authorization denied',
         });
 

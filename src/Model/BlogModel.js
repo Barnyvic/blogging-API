@@ -12,7 +12,7 @@ const BlogSchema = new Schema(
         Description: { type: String, require: true },
         Author: { type: String, require: true },
         State: { type: String, default: 'draft', enum: ['draft', 'published'] },
-        Read_Count: { type: Number },
+        Read_Count: { type: Number, default: 0 },
         Reading_Time: { type: Number },
         Tags: { type: String },
         Body: { type: String, require: true },

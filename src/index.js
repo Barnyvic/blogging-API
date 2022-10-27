@@ -8,7 +8,6 @@ const { dbConnection } = require('./database/dbConfig');
 const registerationRoute = require('./routes/RegisterRoute');
 const blogRoute = require('./routes/blogRoutes');
 const { errorHandler } = require('./middleware/errorHandler');
-const { authenticate } = require('./middleware/authenticateUser');
 
 const Port = process.env.PORT || 4005;
 
