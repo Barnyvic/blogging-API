@@ -4,7 +4,7 @@ const morgan = require('morgan');
 require('dotenv').config();
 
 // Importing Routes, authenticate,errorMiddleware and Database
-const dbConnection = require('./database/dbConfig');
+const { dbConnection } = require('./database/dbConfig');
 const registerationRoute = require('./routes/RegisterRoute');
 const { errorHandler } = require('./middleware/errorHandler');
 const { authenticate } = require('./middleware/authenticateUser');
@@ -31,3 +31,5 @@ app.use(errorHandler);
 app.listen(Port, () => {
     console.log(`Application running on ${Port}`);
 });
+
+module.exports = { app };
