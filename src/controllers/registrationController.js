@@ -3,10 +3,10 @@ const Jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 require('dotenv').config();
 
-const registerUser = async (req, res) => {
+const registerUser = async (req, res, next) => {
     const { email, password, firstname, lastname, username, confirmPassword } =
         req.body;
-
+    //    making sure all fields are valid
     if (
         !email ||
         !password ||
@@ -17,11 +17,11 @@ const registerUser = async (req, res) => {
     ) {
         return res.send({ message: 'Fill empty fields' });
     }
-
+    //   confirming password
     if (password !== confirmPassword) {
         return res.send({ message: 'PassWord must Match' });
     }
-
+    //   saving to database
     try {
         const user = await UserModel.create({
             Email: email,
@@ -32,14 +32,11 @@ const registerUser = async (req, res) => {
         });
         return res.status(201).send({ message: 'User created successfully' });
     } catch (error) {
-        console.log(error);
-        res.status(500).send({
-            message: error.message,
-        });
+        next(error.message);
     }
 };
 
-const loginUser = async (req, res) => {
+const loginUser = async (req, res, next) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
@@ -50,12 +47,13 @@ const loginUser = async (req, res) => {
 
     try {
         const User = await UserModel.findOne({ Email: email });
-
+        // if user is not found in the database
         if (!User) {
             return res.status(409).send({ message: 'User not found' });
         }
-
+        // if user is already in the database
         if (User) {
+            // verifing the user password
             const validatePassword = await bcrypt.compare(
                 password,
                 User.Password
@@ -67,7 +65,7 @@ const loginUser = async (req, res) => {
             const token = Jwt.sign(payload, process.env.JWT_SECRET, {
                 expiresIn: '1h',
             });
-
+            // parsing the token to a cookie
             return res
                 .cookie('token', token, {
                     httpOnly: true,
@@ -76,7 +74,7 @@ const loginUser = async (req, res) => {
                 .send({ message: 'Login successful' });
         }
     } catch (error) {
-        console.log(error);
+        next(error.message);
     }
 };
 
