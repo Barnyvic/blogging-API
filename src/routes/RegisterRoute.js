@@ -5,7 +5,7 @@ const {
     loginUser,
 } = require('../controllers/registrationController');
 
-registerationRoute.post('/signup', registerUser);
+registerationRoute.post('/register', registerUser);
 registerationRoute.post('/login', loginUser);
 
 module.exports = registerationRoute;
