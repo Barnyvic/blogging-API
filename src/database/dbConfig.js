@@ -8,16 +8,14 @@ const dbConnection = async () => {
             ? process.env.TEST_MONGODB_URI
             : process.env.MONGODB_URI;
 
-    mongoose.connect(mongodbURL);
-
-    mongoose.connection.on('connected', () => {
-        console.log('MONGODB CONNECTED SUCCESSFULLY!...');
-    });
-
-    mongoose.connection.on('error', (err) => {
-        console.log('An error occurred while connecting to MongoDB');
-        console.log(err);
-    });
+    try {
+        //connecting to the database
+        await mongoose.connect(mongodbURL);
+        console.log('MongoDB Connected...');
+    } catch (err) {
+        console.error(err.message);
+        process.exit(1);
+    }
 };
 
 module.exports = { dbConnection };

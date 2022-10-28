@@ -49,7 +49,7 @@ const loginUser = async (req, res, next) => {
         const User = await UserModel.findOne({ Email: email });
         // if user is not found in the database
         if (!User) {
-            return res.status(409).send({ message: 'User not found' });
+            return res.status(409).send({ message: 'Wrong credentials!' });
         }
         // if user is already in the database
         if (User) {

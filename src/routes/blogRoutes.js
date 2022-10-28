@@ -5,7 +5,7 @@ const {
     getAllBlogs,
     updateBlogs,
     deleteBlogs,
-    getBlogsbyUser,
+    getBlogbyUser,
 } = require('../controllers/blogController');
 const { authenticate } = require('../middleware/authenticateUser');
 
@@ -13,7 +13,7 @@ const blogRoute = express.Router();
 
 blogRoute.post('/createblog', authenticate, createNewblog);
 
-blogRoute.get('/posts', getAllBlogs);
+blogRoute.get('/blogs', getAllBlogs);
 
 blogRoute.route('/editblog').put(updateBlogs).delete(deleteBlogs);
 
