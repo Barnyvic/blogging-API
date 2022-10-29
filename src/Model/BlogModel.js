@@ -4,6 +4,10 @@ const { Schema } = mongoose;
 
 const BlogSchema = new Schema(
     {
+        user: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Users',
+        },
         Title: {
             type: String,
             require: true,
@@ -13,13 +17,9 @@ const BlogSchema = new Schema(
         Author: { type: String, require: true },
         State: { type: String, default: 'draft', enum: ['draft', 'published'] },
         Read_Count: { type: Number, default: 0 },
-        Reading_Time: { type: Number },
-        Tags: { type: String },
+        Reading_Time: { type: String },
+        Tags: { type: [String] },
         Body: { type: String, require: true },
-        owner: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'USERS',
-        },
     },
     { timestamps: true }
 );
