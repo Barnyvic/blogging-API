@@ -2,9 +2,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
-const Shema = mongoose.Schema;
-
-const UserSchema = new Shema(
+const UserSchema = new mongoose.Schema(
     {
         First_Name: {
             type: String,
@@ -33,6 +31,12 @@ const UserSchema = new Shema(
             required: 'Password is required',
             minlength: [6, 'Password must be at least 6 characters long'],
         },
+        article: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'blogs',
+            },
+        ],
     },
     { timestamps: true }
 );
@@ -50,4 +54,4 @@ UserSchema.method.validatePassword = async function (password) {
     return compare;
 };
 
-module.exports = mongoose.model('USERS', UserSchema);
+module.exports = mongoose.model('Users', UserSchema);

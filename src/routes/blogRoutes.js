@@ -13,7 +13,7 @@ const blogRoute = express.Router();
 
 blogRoute.post('/createblog', authenticate, createNewblog);
 
-blogRoute.get('/blogs', getAllBlogs);
+blogRoute.get('/articles', getAllBlogs);
 
 blogRoute.route('/editblog').put(updateBlogs).delete(deleteBlogs);
 

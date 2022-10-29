@@ -36,7 +36,7 @@ const registerUser = async (req, res, next) => {
         });
         return res.status(200).send({ message: 'User created successfully' });
     } catch (error) {
-        next(error.message);
+        next(error);
     }
 };
 
