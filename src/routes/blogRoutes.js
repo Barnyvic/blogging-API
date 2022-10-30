@@ -5,7 +5,7 @@ const {
     getAllBlogs,
     updateBlogs,
     deleteBlogs,
-    getBlogbyUser,
+    upadetBlogbyUser,
 } = require('../controllers/blogController');
 const { authenticate } = require('../middleware/authenticateUser');
 
@@ -15,6 +15,6 @@ blogRoute.post('/createblog', authenticate, createNewblog);
 
 blogRoute.get('/articles', getAllBlogs);
 
-blogRoute.route('/editblog').put(updateBlogs).delete(deleteBlogs);
+blogRoute.put('/editblog/:id', upadetBlogbyUser);
 
 module.exports = blogRoute;

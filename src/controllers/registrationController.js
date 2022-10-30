@@ -69,7 +69,10 @@ const loginUser = async (req, res, next) => {
             if (!validatePassword) {
                 return res.status(401).send({ message: 'Invalid password' });
             }
-            let payload = { id: User._id };
+            let payload = {
+                id: User._id,
+                username: User.Username,
+            };
             const token = Jwt.sign(payload, process.env.JWT_SECRET, {
                 expiresIn: '1h',
             });
@@ -78,7 +81,11 @@ const loginUser = async (req, res, next) => {
                 httpOnly: true,
             })
                 .status(200)
-                .send({ message: 'Login successful' });
+                .send({
+                    token,
+                    Email: User.Email,
+                    Name: `${User.First_Name} ${User.Last_Name}`,
+                });
         }
     } catch (error) {
         next(error.message);

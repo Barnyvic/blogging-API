@@ -1,8 +1,13 @@
 // importing  blog model from model
 const blogModel = require('../Model/BlogModel');
 const UserModel = require('../Model/UserModel');
+const Jwt = require('jsonwebtoken');
+require('dotenv').config();
 
-// create a new blog
+//@desc Create a new Blog
+//@route POST /createblog
+//@access Private
+
 const createNewblog = async (req, res, next) => {
     const { title, description, author, body, tags } = req.body;
 
@@ -31,9 +36,13 @@ const createNewblog = async (req, res, next) => {
 
         res.status(201).send({ message: 'Blog created Succesfully ' });
     } catch (error) {
-        next(error);
+        next(error.message);
     }
 };
+
+//@desc get All Blogs
+//@route GET /articles
+//@access Public
 
 const getAllBlogs = async (req, res, next) => {
     try {
@@ -52,25 +61,34 @@ const getAllBlogs = async (req, res, next) => {
             res.status(404).send({ message: 'No Blog Found' });
         }
     } catch (error) {
-        next(error);
+        next(error.message);
     }
 };
 
-const getBlogbyUser = async (req, res, next) => {
-    // query params
-    const id = req.params.id;
+//@desc upadet Blog post by User
+//@route GET /editblog
+//@access Private
 
+const upadetBlogbyUser = async (req, res, next) => {
+    const { State, title } = req.body;
     try {
-        // getting single blog by id
-        const Singleblog = await blogModel.findById({ _id: id });
+        const Token = req.cookies.accessToken;
+        const user = Jwt.verify(Token, process.env.JWT_SECRET);
 
-        // filter state === 'published'
-        const blog = Singleblog.filter((b) => b.State === 'published');
+        const Note = await blogModel.findById(req.params.id);
 
-        if (blog) {
-            res.status(200).send({ Blog: blog });
+        if (user.id === Note.user._id.toString()) {
+            const updatedBlog = await blogModel.findByIdAndUpdate(
+                { _id: req.params.id },
+                { $set: { State: State, Title: title } },
+                {
+                    new: true,
+                }
+            );
+
+            res.status(200).send(updatedBlog);
         } else {
-            res.status(404).send({ message: 'No Blog Found' });
+            res.status(401).send({ message: 'You cant access this resourece' });
         }
     } catch (error) {
         next(error);
@@ -89,10 +107,21 @@ const readingTime = (body) => {
     return `${time}mins`;
 };
 
+const getTokenFrom = (Token) => {
+    const token = Token;
+    const decodedToken = jwt.verify(token, process.env.SECRET);
+    console.log(process.env.SECRET);
+    if (!decodedToken.id) {
+        return response.status(401).json({ error: 'token missing or invalid' });
+    } else {
+        return decodedToken.id;
+    }
+};
+
 module.exports = {
     createNewblog,
     getAllBlogs,
     updateBlogs,
     deleteBlogs,
-    getBlogbyUser,
+    upadetBlogbyUser,
 };
