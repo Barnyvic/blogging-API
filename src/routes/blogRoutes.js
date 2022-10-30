@@ -4,7 +4,7 @@ const {
     createNewblog,
     getAllBlogs,
     updateBlogs,
-    deleteBlogs,
+    deleteBlogByUser,
     upadetBlogbyUser,
 } = require('../controllers/blogController');
 const { authenticate } = require('../middleware/authenticateUser');

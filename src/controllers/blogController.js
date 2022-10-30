@@ -9,9 +9,9 @@ require('dotenv').config();
 //@access Private
 
 const createNewblog = async (req, res, next) => {
-    const { title, description, author, body, tags } = req.body;
+    const { title, description, body, tags } = req.body;
 
-    if (!title || !description || !author || !body || !tags) {
+    if (!title || !description || !body || !tags) {
         return res.status(400).send({ message: 'Fill empty fields' });
     }
     try {
@@ -21,7 +21,7 @@ const createNewblog = async (req, res, next) => {
         const note = new blogModel({
             Title: title,
             Description: description,
-            Author: author,
+            Author: `${user.First_Name} ${user.Last_Name}`,
             Body: body,
             Tags: tags,
             Reading_Time: readingTime(body),
@@ -51,26 +51,24 @@ const getAllBlogs = async (req, res, next) => {
             .find({})
             .populate('user', { First_Name: 1, Last_Name: 1, _id: 1 });
 
-        //filter state === 'published'
+        const blogs = allBlogs.filter((blog) => blog.State === 'published');
 
-        // const blogs = allBlogs.filter((blog) => blog.State === 'published');
-
-        if (allBlogs) {
-            res.status(200).send(allBlogs);
+        if (blogs) {
+            res.status(200).send(blogs);
         } else {
             res.status(404).send({ message: 'No Blog Found' });
         }
     } catch (error) {
-        next(error.message);
+        next(error);
     }
 };
 
-//@desc upadet Blog post by User
-//@route GET /editblog
+//@desc update Blog post by User
+//@route GET /editblog/:id
 //@access Private
 
 const upadetBlogbyUser = async (req, res, next) => {
-    const { State, title } = req.body;
+    const { State, title, description, author, body, tags } = req.body;
     try {
         const Token = req.cookies.accessToken;
         const user = Jwt.verify(Token, process.env.JWT_SECRET);
@@ -80,7 +78,16 @@ const upadetBlogbyUser = async (req, res, next) => {
         if (user.id === Note.user._id.toString()) {
             const updatedBlog = await blogModel.findByIdAndUpdate(
                 { _id: req.params.id },
-                { $set: { State: State, Title: title } },
+                {
+                    $set: {
+                        State: State,
+                        Title: title,
+                        Description: description,
+                        Author: author,
+                        Body: body,
+                        tags: tags,
+                    },
+                },
                 {
                     new: true,
                 }
@@ -88,7 +95,7 @@ const upadetBlogbyUser = async (req, res, next) => {
 
             res.status(200).send(updatedBlog);
         } else {
-            res.status(401).send({ message: 'You cant access this resourece' });
+            res.status(401).send({ message: 'You cant access this resource' });
         }
     } catch (error) {
         next(error);
@@ -97,7 +104,26 @@ const upadetBlogbyUser = async (req, res, next) => {
 
 const updateBlogs = async (req, res, next) => {};
 
-const deleteBlogs = async (req, res, next) => {};
+//@desc delete Blog post by User
+//@route GET /deleteblog/:id
+//@access Private
+const deleteBlogByUser = async (req, res, next) => {
+    try {
+        const Token = req.cookies.accessToken;
+        const user = Jwt.verify(Token, process.env.JWT_SECRET);
+
+        const Note = await blogModel.findById(req.params.id);
+
+        if (user.id === Note.user._id.toString()) {
+            await blogModel.findByIdAndDelete(req.params.id);
+            res.status(204).send({ message: 'Deleted successfully' });
+        } else {
+            res.status(401).send({ message: 'You cant access this resource' });
+        }
+    } catch (error) {
+        next(error);
+    }
+};
 
 // calculating the total time to read the book
 const readingTime = (body) => {
@@ -107,21 +133,10 @@ const readingTime = (body) => {
     return `${time}mins`;
 };
 
-const getTokenFrom = (Token) => {
-    const token = Token;
-    const decodedToken = jwt.verify(token, process.env.SECRET);
-    console.log(process.env.SECRET);
-    if (!decodedToken.id) {
-        return response.status(401).json({ error: 'token missing or invalid' });
-    } else {
-        return decodedToken.id;
-    }
-};
-
 module.exports = {
     createNewblog,
     getAllBlogs,
     updateBlogs,
-    deleteBlogs,
+    deleteBlogByUser,
     upadetBlogbyUser,
 };

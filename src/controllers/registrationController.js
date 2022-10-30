@@ -1,6 +1,6 @@
 const UserModel = require('../Model/UserModel');
 const Jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
+const { validPassword } = require('../utilies/comparepassword');
 require('dotenv').config();
 
 //@desc Register new user
@@ -45,50 +45,43 @@ const registerUser = async (req, res, next) => {
 //@access Public
 
 const loginUser = async (req, res, next) => {
-    const { email, password } = req.body;
-
-    if (!email || !password) {
-        return res
-            .status(400)
-            .send({ message: 'Pls Complete the required fields' });
-    }
-
     try {
-        const User = await UserModel.findOne({ Email: email });
-        // if user is not found in the database
-        if (!User) {
+        const { email, password } = req.body;
+
+        if (!email || !password) {
+            return res
+                .status(400)
+                .send({ message: 'Pls Complete the required fields' });
+        }
+
+        const user = await UserModel.findOne({ email });
+
+        if (!user)
             return res.status(409).send({ message: 'Wrong credentials!' });
-        }
-        // if user is already in the database
-        if (User) {
-            // verifing the user password
-            const validatePassword = await bcrypt.compare(
-                password,
-                User.Password
-            );
-            if (!validatePassword) {
-                return res.status(401).send({ message: 'Invalid password' });
-            }
-            let payload = {
-                id: User._id,
-                username: User.Username,
-            };
-            const token = Jwt.sign(payload, process.env.JWT_SECRET, {
-                expiresIn: '1h',
+
+        const validatePassword = await validPassword(password, user.Password);
+        if (!validatePassword)
+            return res.status(401).send({ message: 'Invalid password' });
+
+        let payload = {
+            id: user._id,
+            username: user.Username,
+        };
+        const token = Jwt.sign(payload, process.env.JWT_SECRET, {
+            expiresIn: '1h',
+        });
+        // parsing the token to a cookie
+        res.cookie('accessToken', token, {
+            httpOnly: true,
+        })
+            .status(200)
+            .send({
+                token,
+                Email: user.Email,
+                Name: `${user.First_Name} ${user.Last_Name}`,
             });
-            // parsing the token to a cookie
-            res.cookie('accessToken', token, {
-                httpOnly: true,
-            })
-                .status(200)
-                .send({
-                    token,
-                    Email: User.Email,
-                    Name: `${User.First_Name} ${User.Last_Name}`,
-                });
-        }
     } catch (error) {
-        next(error.message);
+        next(error);
     }
 };
 
