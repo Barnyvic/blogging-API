@@ -34,7 +34,7 @@ const UserSchema = new mongoose.Schema(
         article: [
             {
                 type: mongoose.Schema.Types.ObjectId,
-                ref: 'blogs',
+                ref: 'BLOG',
             },
         ],
     },

@@ -23,7 +23,7 @@ app.use(cookieParser());
 
 // middleware for the Routes
 app.use('/', registerationRoute);
-app.use('/blog', blogRoute);
+app.use('/article', blogRoute);
 
 // routes not found
 app.use('*', (req, res) => {

@@ -6,19 +6,21 @@ const {
     getSingleBlog,
     deleteBlogByUser,
     upadetBlogbyUser,
+    userBlogs,
 } = require('../controllers/blogController');
+
 const { authenticate } = require('../middleware/authenticateUser');
 
 const blogRoute = express.Router();
 
-blogRoute.post('/createarticle', authenticate, createNewblog);
+blogRoute.route('/').post(authenticate, createNewblog).get(getAllBlogs);
 
-blogRoute.get('/article', getAllBlogs);
+blogRoute
+    .route('/:articlesid')
+    .get(getSingleBlog)
+    .put(upadetBlogbyUser)
+    .delete(deleteBlogByUser);
 
-blogRoute.get('/article/:id', getSingleBlog);
-
-blogRoute.put('/editarticle/:id', upadetBlogbyUser);
-
-blogRoute.delete('/deletearticle/:id', deleteBlogByUser);
+blogRoute.route('/article/userarticle').get(userBlogs);
 
 module.exports = blogRoute;

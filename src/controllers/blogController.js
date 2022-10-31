@@ -146,7 +146,7 @@ const deleteBlogByUser = async (req, res, next) => {
 };
 
 //@desc get Blogs post by User
-//@route GET /deletearticle/:id
+//@route GET /article
 //@access Private
 
 const userBlogs = async (req, res, next) => {
@@ -154,15 +154,19 @@ const userBlogs = async (req, res, next) => {
         const Token = req.cookies.accessToken;
         const user = Jwt.verify(Token, process.env.JWT_SECRET);
 
-        const blogs = await blogModel.find();
+        let filter = {};
+        if (req.query.state) {
+            filter = { State: req.query.state };
+        }
 
-        if (user.id !== blogs.user._id.toString())
-            return res
-                .status(401)
-                .send({ message: 'You cant access this resource' });
+        const User = await UserModel.findById(user.id)
+            .populate('article')
+            .sort(filter);
 
-        if (user.id == blogs.user._id.toString())
-            return res.status(200).send({ Blogpost: blogs });
+        res.status(200).send({
+            message: 'Your blog post',
+            blogs: User.article,
+        });
     } catch (error) {
         next(error);
     }
@@ -182,4 +186,5 @@ module.exports = {
     getSingleBlog,
     deleteBlogByUser,
     upadetBlogbyUser,
+    userBlogs,
 };
