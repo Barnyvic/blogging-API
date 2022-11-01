@@ -47,33 +47,34 @@ const createNewblog = async (req, res, next) => {
 const getAllBlogs = async (req, res, next) => {
     try {
         //pagination
-        const page = parseInt(req.query.page) - 1 || 0;
-        const limit = parseInt(req.query.limit) || 5;
-        let search = req.query.items;
-        let searchObj = {};
-        // Create expression
-        let re = new RegExp(search, 'i');
-
-        if (search != undefined && search != '') {
-            //This all are the fields that will used as match
-            find = {
-                $or: [
-                    { Title: { $regex: re } },
-                    { Author: { $regex: re } },
-                    { Tags: { $regex: re } },
-                ],
-            };
+        const page = parseInt(req.query.page) || 0;
+        const limit = parseInt(req.query.limit) || 20;
+        // search by title, author and tags
+        let search = {};
+        if (req.query.author) {
+            search = { Author: req.query.author };
+        } else if (req.query.title) {
+            search = { Title: req.query.title };
+        } else if (req.query.tag) {
+            search = { Tags: req.query.tag };
         }
 
         // getting al blogs from the database
         const blogs = await blogModel
-            .find(searchObj)
-            .populate('user', { First_Name: 1, Last_Name: 1, _id: 1 })
+            .find(search)
             .where({ State: 'published' })
-            .sort({ Reading_Time: 1, Read_Count: -1, timestamps: -1 });
+            .sort({ Reading_Time: 1, Read_Count: -1, timestamps: -1 })
+            .skip(page * limit)
+            .limit(limit);
+
+        const count = await blogModel.countDocuments();
 
         if (blogs) {
-            res.status(200).send({ message: blogs });
+            res.status(200).send({
+                message: blogs,
+                totalPages: Math.ceil(count / limit),
+                currentPage: page,
+            });
         } else {
             res.status(404).send({ message: 'No Blog Found' });
         }
@@ -170,13 +171,13 @@ const userBlogs = async (req, res, next) => {
         const user = req.user;
 
         // implementing pagination
-        const { page = 1, limit = 10 } = req.query;
+        const page = parseInt(req.query.page) || 0;
+        const limit = parseInt(req.query.limit) || 10;
 
         const User = await UserModel.findById(user.id)
             .populate('article')
-            .skip((page - 1) * limit)
-            .limit(limit * 1)
-            .exec();
+            .skip(page * limit)
+            .limit(limit);
         const count = await UserModel.countDocuments();
 
         res.status(200).send({
