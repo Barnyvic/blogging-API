@@ -46,13 +46,31 @@ const createNewblog = async (req, res, next) => {
 
 const getAllBlogs = async (req, res, next) => {
     try {
-        // getting al blogs from the database
-        const allBlogs = await blogModel
-            .find({})
-            .populate('user', { First_Name: 1, Last_Name: 1, _id: 1 })
-            .where({ State: 'published' });
+        //pagination
+        const page = parseInt(req.query.page) - 1 || 0;
+        const limit = parseInt(req.query.limit) || 5;
+        let search = req.query.items;
+        let searchObj = {};
+        // Create expression
+        let re = new RegExp(search, 'i');
 
-        const blogs = allBlogs.filter((blog) => blog.State === 'published');
+        if (search != undefined && search != '') {
+            //This all are the fields that will used as match
+            find = {
+                $or: [
+                    { Title: { $regex: re } },
+                    { Author: { $regex: re } },
+                    { Tags: { $regex: re } },
+                ],
+            };
+        }
+
+        // getting al blogs from the database
+        const blogs = await blogModel
+            .find(searchObj)
+            .populate('user', { First_Name: 1, Last_Name: 1, _id: 1 })
+            .where({ State: 'published' })
+            .sort({ Reading_Time: 1, Read_Count: -1, timestamps: -1 });
 
         if (blogs) {
             res.status(200).send({ message: blogs });
@@ -93,8 +111,7 @@ const getSingleBlog = async (req, res, next) => {
 const upadetBlogbyUser = async (req, res, next) => {
     const { State, title, description, body, tags } = req.body;
     try {
-        const Token = req.cookies.accessToken;
-        const user = Jwt.verify(Token, process.env.JWT_SECRET);
+        const user = req.user;
 
         const blog = await blogModel.findById(req.params.id);
 
@@ -129,8 +146,7 @@ const upadetBlogbyUser = async (req, res, next) => {
 //@access Private
 const deleteBlogByUser = async (req, res, next) => {
     try {
-        const Token = req.cookies.accessToken;
-        const user = Jwt.verify(Token, process.env.JWT_SECRET);
+        const user = req.user;
 
         const blog = await blogModel.findById(req.params.id);
 
@@ -151,19 +167,23 @@ const deleteBlogByUser = async (req, res, next) => {
 
 const userBlogs = async (req, res, next) => {
     try {
-        const Token = req.cookies.accessToken;
-        const user = Jwt.verify(Token, process.env.JWT_SECRET);
+        const user = req.user;
 
-        let filter = {};
-        if (req.query.state) {
-            filter = { State: req.query.state };
-        }
+        // implementing pagination
+        const { page = 1, limit = 10 } = req.query;
 
-        const User = await UserModel.findById(user.id).populate('article');
+        const User = await UserModel.findById(user.id)
+            .populate('article')
+            .skip((page - 1) * limit)
+            .limit(limit * 1)
+            .exec();
+        const count = await UserModel.countDocuments();
 
         res.status(200).send({
             message: 'Your blog post',
             blogs: User.article,
+            totalPages: Math.ceil(count / limit),
+            currentPage: page,
         });
     } catch (error) {
         next(error);
