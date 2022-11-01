@@ -15,12 +15,12 @@ const blogRoute = express.Router();
 
 blogRoute.route('/').post(authenticate, createNewblog).get(getAllBlogs);
 
+blogRoute.route('/userarticle').get(userBlogs);
+
 blogRoute
-    .route('/:articlesid')
+    .route('/:id')
     .get(getSingleBlog)
     .put(upadetBlogbyUser)
     .delete(deleteBlogByUser);
-
-blogRoute.route('/article/userarticle').get(userBlogs);
 
 module.exports = blogRoute;

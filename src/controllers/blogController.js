@@ -159,9 +159,7 @@ const userBlogs = async (req, res, next) => {
             filter = { State: req.query.state };
         }
 
-        const User = await UserModel.findById(user.id)
-            .populate('article')
-            .sort(filter);
+        const User = await UserModel.findById(user.id).populate('article');
 
         res.status(200).send({
             message: 'Your blog post',
