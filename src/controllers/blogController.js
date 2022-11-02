@@ -5,7 +5,7 @@ const Jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 //@desc Create a new Blog
-//@route POST /createarticle
+//@route POST /
 //@access Private
 
 const createNewblog = async (req, res, next) => {
@@ -41,7 +41,7 @@ const createNewblog = async (req, res, next) => {
 };
 
 //@desc get All Blogs
-//@route GET /article
+//@route GET /
 //@access Public
 
 const getAllBlogs = async (req, res, next) => {
@@ -49,6 +49,7 @@ const getAllBlogs = async (req, res, next) => {
         //pagination
         const page = parseInt(req.query.page) || 0;
         const limit = parseInt(req.query.limit) || 20;
+
         // search by title, author and tags
         let search = {};
         if (req.query.author) {
@@ -84,7 +85,7 @@ const getAllBlogs = async (req, res, next) => {
 };
 
 //@desc get a single blog
-//@route GET /article/:id
+//@route GET /:id
 //@access Public
 
 const getSingleBlog = async (req, res, next) => {
@@ -106,7 +107,7 @@ const getSingleBlog = async (req, res, next) => {
 };
 
 //@desc update Blog post by User
-//@route PUT /editarticle/:id
+//@route PUT /:id
 //@access Private
 
 const upadetBlogbyUser = async (req, res, next) => {
@@ -143,7 +144,7 @@ const upadetBlogbyUser = async (req, res, next) => {
 };
 
 //@desc delete Blog post by User
-//@route DELETE /deletearticle/:id
+//@route DELETE /:id
 //@access Private
 const deleteBlogByUser = async (req, res, next) => {
     try {
@@ -163,7 +164,7 @@ const deleteBlogByUser = async (req, res, next) => {
 };
 
 //@desc get Blogs post by User
-//@route GET /article
+//@route GET /userarticle
 //@access Private
 
 const userBlogs = async (req, res, next) => {
