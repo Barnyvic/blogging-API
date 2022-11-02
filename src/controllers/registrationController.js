@@ -61,7 +61,7 @@ const login = async (req, res, next) => {
         if (!user)
             return res.status(409).send({ message: 'Wrong credentials!' });
 
-        const validPassword = bcrypt.compare(Password, user.Password);
+        const validPassword = await user.validatePassword(Password);
 
         if (!validPassword)
             return res.status(401).send({ message: 'Invalid password' });
