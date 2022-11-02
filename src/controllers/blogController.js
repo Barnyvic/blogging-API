@@ -92,7 +92,8 @@ const getSingleBlog = async (req, res, next) => {
     try {
         const singleBlog = await blogModel
             .findById(req.params.id)
-            .where({ State: 'published' });
+            .where({ State: 'published' })
+            .populate('user', { First_Name: 1, Last_Name: 1, Email: 1 });
 
         if (!singleBlog)
             return res.status(404).send({ message: 'No such blog found' });
