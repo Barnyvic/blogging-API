@@ -155,7 +155,14 @@ const deleteBlogByUser = async (req, res, next) => {
 
         if (user.id === blog.user._id.toString()) {
             await blogModel.findByIdAndDelete(req.params.id);
-            return res.status(204).send({ message: 'Deleted successfully' });
+            const user = await UserModel.findById(req.user._id);
+
+            const index = user.article.indexOf(req.params.id);
+            if (index !== -1) {
+                user.article.splice(index, 1);
+                await user.save();
+                res.status(204).send({ message: 'Deleted successfully' });
+            }
         } else {
             res.status(401).send({ message: 'You cant access this resource' });
         }

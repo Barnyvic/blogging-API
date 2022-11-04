@@ -7,7 +7,7 @@ const { dbConnection } = require('../database/dbConfig');
 
 const api = supertest(app);
 
-describe('signup', () => {
+describe('sign up and login a user', () => {
     beforeAll(async () => {
         await dbConnection();
     });

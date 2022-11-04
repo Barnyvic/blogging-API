@@ -24,7 +24,7 @@ const authenticate = async (req, res, next) => {
         }
     } catch (error) {
         res.clearCookie('accessToken');
-        next(error);
+        next(error.message);
     }
 };
 
