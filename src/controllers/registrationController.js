@@ -46,9 +46,9 @@ const registerUser = async (req, res, next) => {
 //@access Public
 
 const login = async (req, res, next) => {
-    const { email, password } = req.body;
+    const { email, Password } = req.body;
 
-    if (!email || !password) {
+    if (!email || !Password) {
         return res
             .status(400)
             .send({ message: 'Pls Complete the required fields' });
@@ -60,7 +60,7 @@ const login = async (req, res, next) => {
         if (!user)
             return res.status(409).send({ message: 'Wrong credentials!' });
 
-        const validPassword = await user.validatePassword(password);
+        const validPassword = await user.validatePassword(Password);
 
         if (!validPassword)
             return res.status(401).send({ message: 'Invalid password' });
