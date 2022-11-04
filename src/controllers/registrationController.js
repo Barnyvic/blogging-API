@@ -1,6 +1,5 @@
 const UserModel = require('../Model/UserModel');
 const Jwt = require('jsonwebtoken');
-const { validPassword } = require('../utilies/comparepassword');
 require('dotenv').config();
 const bcrypt = require('bcrypt');
 
