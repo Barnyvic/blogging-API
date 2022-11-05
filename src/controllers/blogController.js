@@ -1,7 +1,6 @@
 // importing  blog model from model
 const blogModel = require('../Model/BlogModel');
 const UserModel = require('../Model/UserModel');
-const Jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 //@desc Create a new Blog
@@ -64,7 +63,7 @@ const getAllBlogs = async (req, res, next) => {
         const blogs = await blogModel
             .find(search)
             .where({ State: 'published' })
-            .sort({ Reading_Time: 1, Read_Count: -1, timestamps: -1 })
+            .sort({ Reading_Time: 1, Read_Count: 1, timestamps: -1 })
             .skip(page * limit)
             .limit(limit);
 
