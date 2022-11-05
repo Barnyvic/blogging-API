@@ -29,4 +29,6 @@
 
 ## getAuserBlog ~~ Method GET >> route /userarticle
 
+> > the token is stored ib a cookie called ##accessToken
+
 > > Live Preview for the api : https://barnyarticleapi.cyclic.app/
