@@ -22,7 +22,7 @@ app.use(morgan('dev'));
 app.use(cookieParser());
 
 // middleware for the Routes
-app.use('/', registerationRoute);
+app.use('/auth', registerationRoute);
 app.use('/articles', blogRoute);
 
 // routes not found

@@ -11,9 +11,9 @@
 
 ## signIn , Login and Logout endpoints
 
-# Sign in = http://localhost:5005/register,
+# Sign in = auth/register,
 
-# Login = http://localhost:5005/signIn,
+# Login = auth/signIn,
 
 > > Blog Routes <<
 
