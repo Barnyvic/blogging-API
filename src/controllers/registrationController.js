@@ -1,7 +1,6 @@
 const UserModel = require('../Model/UserModel');
 const Jwt = require('jsonwebtoken');
 require('dotenv').config();
-const bcrypt = require('bcrypt');
 
 //@desc Register new user
 //@route POST /register
@@ -76,7 +75,7 @@ const login = async (req, res, next) => {
         res.cookie('accessToken', token, {
             httpOnly: true,
         }).send({
-            message: token,
+            Token: token,
             Email: user.Email,
             Name: `${user.First_Name} ${user.Last_Name}`,
         });

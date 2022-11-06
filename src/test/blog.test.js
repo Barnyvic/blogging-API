@@ -17,6 +17,21 @@ describe('Create a blog , get all blogs , delete and update a perticular blog po
     });
 
     it('should create a new blog post ', async () => {
-        const user = await UserModel.findById(req.user._id);
+        // const user = await UserModel.findById();
+
+        const newBlog = {
+            title: 'This is a new blog',
+            description: 'This is a new blog description',
+            body: 'This is a new blog i love coding very well',
+            tags: ['food', 'beans'],
+        };
+
+        const response = await api.post('/api/v1/articles').send(newBlog);
+
+        // user.article = user.article.concat(newBlog._id);
+        // await user.save();
+
+        expect(response.status).toBe(200);
+        expect(response.body).toHaveProperty('message');
     });
 });

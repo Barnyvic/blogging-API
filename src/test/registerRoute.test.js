@@ -18,14 +18,14 @@ describe('sign up and login a user', () => {
 
     it('should create a new user ', async () => {
         const newUser = {
-            email: 'barnyvictor@gmail.com',
-            password: '1234tyr',
-            firstname: 'Gifty',
-            lastname: 'John',
-            username: 'johner',
-            confirmPassword: '1234tyr',
+            email: 'victor@gmail.com',
+            password: '1234567',
+            firstname: 'Victor',
+            lastname: 'Barny',
+            username: 'Vicky',
+            confirmPassword: '1234567',
         };
-        const response = await api.post('/register').send(newUser);
+        const response = await api.post('/api/v1/auth/register').send(newUser);
 
         expect(response.status).toBe(200);
         expect(response.body).toHaveProperty('message');
@@ -33,10 +33,25 @@ describe('sign up and login a user', () => {
 
     it('should log a user in ', async () => {
         const loginDetails = {
-            email: 'barnyvictor@gmail.com',
-            password: '1234tyr',
+            email: 'victor@gmail.com',
+            Password: '1234567',
         };
-        const response = await supertest(app).post('/login').send(loginDetails);
+        const response = await api
+            .post('/api/v1/auth/login')
+            .send(loginDetails);
         expect(response.status).toBe(200);
+        expect(response.body).toHaveProperty('Token');
+        expect(response.body).toHaveProperty('Email');
+    });
+
+    it('should return error if incorect password ', async () => {
+        const loginDetails = {
+            email: 'victor@gmail.com',
+            Password: '12345',
+        };
+        const response = await api
+            .post('/api/v1/auth/login')
+            .send(loginDetails);
+        expect(response.status).toBe(401);
     });
 });
