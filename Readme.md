@@ -289,9 +289,9 @@ Body : "this is a new blog post i created "
 }
 ```
 
-### /api/v1/articles/userarticle
+### User articles
 
--   Route: /api/v1/articles/:id
+-   Route: /api/v1/articles/userarticle
 -   Method: GET
 -   Cookies
     -   accessToken
