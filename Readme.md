@@ -1,3 +1,5 @@
+**<u>Blogging API**
+
 > > Port = 5005 || 4005,
 
 <! Package Manager used is NPM --> <!- when you clone the project run npm i to
@@ -9,31 +11,31 @@ install the dependences needed -->
 
 > > npm run test -- to run the application with jest.
 
-<ins> signIn , Login and Logout endpoints</ins>
+<ins> **signIn , Login and Logout endpoints**</ins>
 
 \*\* Sign in = /api/v1/auth/register,
 
 \*\* Login = /api/v1/auth/signIn,
 
-<ins> >> Blog Routes << </ins>
+<ins> **>> Blog Routes <<** </ins>
 
-\*\* createBlog ~~ Method POST >> route /api/v1/articles
+\*\* createBlog ~~ Method POST >> route = /api/v1/articles
 
-\*\* getAllBlog ~~ Method GET >> route /api/v1/articles
+\*\* getAllBlog ~~ Method GET >> route = /api/v1/articles
 
-\*\* getSingleBlog ~~ Method GET >> route /api/v1/articles/:id
+\*\* getSingleBlog ~~ Method GET >> route = /api/v1/articles/:id
 
-\*\* updateBlog ~~ Method PUT >> route /api/v1/articles/:id
+\*\* updateBlog ~~ Method PUT >> route = /api/v1/articles/:id
 
-\*\* deleteBlog ~~ Method DELETE >> route /api/v1/articles/:id
+\*\* deleteBlog ~~ Method DELETE >> route = /api/v1/articles/:id
 
-\*\* getAuserBlog ~~ Method GET >> route /api/v1/articles/userarticle
+\*\* getAuserBlog ~~ Method GET >> route = /api/v1/articles/userarticle
 
-> > the token is stored in a cookie called ##accessToken
+> > **the token is stored in a cookie called** ##accessToken
 
-> > Live Preview for the api : https://barnyarticleapi.cyclic.app/
+> > **Live Preview for the api** : https://barnyarticleapi.cyclic.app/
 
-> > Requirements:
+**Requirements**
 
 1.  Users should be able to signUp and signIn.
 2.  Jwt should be used as a stratagy when signing in.
@@ -44,13 +46,26 @@ install the dependences needed -->
     they created.
 6.  timetaken to read a particular blog should accounted for.
 
-| Tables        |      Are      |  Cool |
-| ------------- | :-----------: | ----: |
-| col 3 is      | right-aligned | $1600 |
-| col 2 is      |   centered    |   $12 |
-| zebra stripes |   are neat    |    $1 |
+**User Model**
 
-| Markdown | Less      | Pretty     |
-| -------- | --------- | ---------- |
-| _Still_  | `renders` | **nicely** |
-| 1        | 2         | 3          |
+| User-Schema | Datatypes |
+| ----------- | :-------: |
+| Firstname   |  String   |
+| Lastname    |  String   |
+| Password    |  String   |
+| email       |  String   |
+| username    |  String   |
+
+**Blog Model**
+
+| Blog-Schema  | Datatypes |
+| ------------ | :-------: |
+| user         | ObjectId  |
+| Title        |  String   |
+| Description  |  String   |
+| Author       |  String   |
+| State        |  String   |
+| Read_Count   |  Number   |
+| Reading_Time |  String   |
+| Tags         | String[]  |
+| Body         |  String   |
