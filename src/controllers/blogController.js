@@ -178,6 +178,11 @@ const userBlogs = async (req, res, next) => {
     try {
         const user = req.user;
 
+        let search = {};
+        if (req.query.state) {
+            search = { State: req.query.state };
+        }
+
         // implementing pagination
         const page = parseInt(req.query.page) || 0;
         const limit = parseInt(req.query.limit) || 10;
@@ -185,6 +190,7 @@ const userBlogs = async (req, res, next) => {
         const User = await UserModel.findById(user.id)
             .populate('article')
             .skip(page * limit)
+            .where(search)
             .limit(limit);
         const count = await UserModel.countDocuments();
 

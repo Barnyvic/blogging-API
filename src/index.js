@@ -25,6 +25,10 @@ app.use(cookieParser());
 app.use('/auth', registerationRoute);
 app.use('/articles', blogRoute);
 
+app.get('/', (req, res) => {
+    res.status(200).send({ message: ' Welcome to the blog!' });
+});
+
 // routes not found
 app.use('*', (req, res) => {
     return res.status(404).json({ message: 'route not found' });
