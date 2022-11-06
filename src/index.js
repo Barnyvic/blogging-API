@@ -22,8 +22,8 @@ app.use(morgan('dev'));
 app.use(cookieParser());
 
 // middleware for the Routes
-app.use('/auth', registerationRoute);
-app.use('/articles', blogRoute);
+app.use('api/v1/auth', registerationRoute);
+app.use('api/v1/articles', blogRoute);
 
 app.get('/', (req, res) => {
     res.status(200).send({ message: ' Welcome to the blog!' });
