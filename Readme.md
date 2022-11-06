@@ -3,13 +3,13 @@
 <!-- Package Manager used is NPM -->
 <!-- when you clone the project run npm i to install the dependences needed -->
 
-## npm run start -- to run the application with node,
+npm run start -- to run the application with node,
 
-## npm run dev -- to run the application with nodemon,
+npm run dev -- to run the application with nodemon,
 
-## npm run test -- to run the application with jest.
+npm run test -- to run the application with jest.
 
-## signIn , Login and Logout endpoints
+signIn , Login and Logout endpoints
 
 # Sign in = auth/register,
 
@@ -29,6 +29,6 @@
 
 ## getAuserBlog ~~ Method GET >> route /userarticle
 
-> > the token is stored ib a cookie called ##accessToken
+> > the token is stored in a cookie called ##accessToken
 
 > > Live Preview for the api : https://barnyarticleapi.cyclic.app/
