@@ -17,6 +17,7 @@ this is an api for blogs
 7.  users should be able to upload image to the blog
 8.  users should be able to like and unlike a blog post
 9.  users should be able to make a comment in a blog
+10. users should be able to delete a comment
 
 ---
 
@@ -58,6 +59,14 @@ this is an api for blogs
 
 -   getAuserBlog : <b>/api/v1/articles/userarticle</b>
 
+-   uploadBlogImage : <b>/api/v1/articles/upload/:id</b>
+
+-   likeBlogPost : <b>/api/v1/articles/like/:id</b>
+
+-   createComment : <b>/api/v1/articles/:id</b>
+
+-   deleteComment : <b>/api/v1/articles/deletecomment/:id</b>
+
 > > **the token is stored in a cookie called** ##accessToken
 
 ---
@@ -95,6 +104,18 @@ this is an api for blogs
 | Reading_Time |  String   |
 | Tags         | String[]  |
 | Body         |  String   |
+|  likes       |  String[]   |
+| image        |  String   |
+| Comment       |  ObjectId   |
+
+**Comment Model**
+
+| Comment-Schema  | Datatypes |
+| ------------ | :-------: |
+| userId         | ObjectId  |
+| Comment        |  String   |
+| blogId  | ObjectId  |
+| userName  |String  |
 
 ---
 
@@ -315,6 +336,90 @@ Body : "this is a new blog post i created "
      Body : "im trying to delete this blog from my database"}]
 ```
 
+### Like BlogPost
+-   Route: /api/v1/articles/like/:id
+-   Method: PATCH
+-   Cookies
+    -   accessToken
+-   Response
+
+```
+"message": "The post has been liked"
+```
+
+### Upload Image 
+-   Route: /api/v1/articles/upload/:id
+-   Method: PATCH
+-   Cookies
+    -   accessToken
+    
+ -   Body
+
+```
+    {
+      image : auth.png
+     }
+
+```
+   
+    
+    
+-   Response
+
+```
+ "message": [
+          {
+     id : 6363d816a2ee2e2486defc19
+     user : 6363d7b44dd381f486a0dc70
+     Title : "a new article"
+     Description :  "new article"
+     Author : "Gift Henry"
+     State : "published"
+     image: "https/cloude/image.png"
+     Read_Count : 1
+     Reading_Time : "1 mins"
+     Tags : ["Football", "UEFA" , "Manchester"  ]
+     Body : "im trying to delete this blog from my database"}]
+```
+
+
+### Create Comment
+-   Route: /api/v1/articles/:id
+-   Method: POST
+-   Cookies
+    -   accessToken
+    
+ -   Body
+
+```
+    {
+      Text : "This is what i love most"
+     }
+
+```
+-   Response
+
+```
+ "message": [
+          {
+    "Comment": "I dont like this kind of Opps",
+    "blogId": "63b6b7058fce053ee0e35849",
+    "userId": "6363d7b44dd381f486a0dc70",
+    "userName": "Henry Paul",
+    "_id": "63b6cd8cec0ff88eddc593b1",
+     }]
+```
+
+### Delete Comment
+-   Route: /api/v1/articles//deletecomment/:id
+-   Method: DELETE
+-   Cookies
+    -   accessToken
+-   Response
+
+```
+"message": "Comment deleted"
+```
 ## Contributors
 
 ---
