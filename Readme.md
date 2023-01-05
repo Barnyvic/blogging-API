@@ -14,6 +14,9 @@ this is an api for blogs
 5.  only users who created the blog should be allowed to edit or delete the blog
     they created.
 6.  timetaken to read a particular blog should accounted for.
+7.  users should be able to upload image to the blog
+8.  users should be able to like and unlike a blog post
+9.  users should be able to make a comment in a blog
 
 ---
 
