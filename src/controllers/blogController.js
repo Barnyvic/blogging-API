@@ -65,7 +65,8 @@ const getAllBlogs = async (req, res, next) => {
             .where({ State: 'published' })
             .sort({ Reading_Time: 1, Read_Count: 1, timestamps: -1 })
             .skip(page * limit)
-            .limit(limit);
+            .limit(limit)
+            .populate('Comment', { Comment: 1, userName: 1 });
 
         const count = await blogModel.countDocuments();
 
@@ -92,7 +93,8 @@ const getSingleBlog = async (req, res, next) => {
         const singleBlog = await blogModel
             .findById(req.params.id)
             .where({ State: 'published' })
-            .populate('user', { First_Name: 1, Last_Name: 1, Email: 1 });
+            .populate('user', { First_Name: 1, Last_Name: 1, Email: 1 })
+            .populate('Comment', { Comment: 1, userName: 1 });
 
         if (!singleBlog)
             return res.status(404).send({ message: 'No such blog found' });
@@ -110,7 +112,7 @@ const getSingleBlog = async (req, res, next) => {
 //@route PUT /:id
 //@access Private
 
-const upadetBlogbyUser = async (req, res, next) => {
+const updateBlogbyUser = async (req, res, next) => {
     const { State, title, description, body, tags } = req.body;
     try {
         const user = req.user;
@@ -205,6 +207,60 @@ const userBlogs = async (req, res, next) => {
     }
 };
 
+// like a BlogPost
+//@desc like a Blogs post
+//@route PATCH /like/:id
+//@access Private
+
+const likeBlogPost = async (req, res, next) => {
+    try {
+        const user = req.user;
+
+        const blog = await blogModel.findById(req.params.id);
+        const User = await UserModel.findById(user.id);
+
+        if (!blog.likes.includes(User.id)) {
+            await blog.updateOne({ $push: { likes: User.id } });
+            res.status(200).json('The post has been liked');
+        } else {
+            await blog.updateOne({ $pull: { likes: User.id } });
+            res.status(200).json('The post has been disliked');
+        }
+    } catch (error) {
+        next(error);
+    }
+};
+
+//upload Blog image
+
+//@desc upload Blog Image
+//@route PATCH /upload/:id
+//@access Private
+
+const uploadBlogImage = async (req, res, next) => {
+    try {
+        const user = req.user;
+
+        const blog = await blogModel.findById(req.params.id);
+
+        if (!blog) {
+            res.status(404).send({ message: 'Not Found' });
+        }
+
+        if (user.id === blog.user._id.toString()) {
+            const uploadImage = await blogModel.findByIdAndUpdate(
+                blog.id,
+                { $set: { image: req.file.path } },
+                { new: true }
+            );
+
+            res.status(200).send(uploadImage);
+        }
+    } catch (error) {
+        next(error);
+    }
+};
+
 // calculating the total time to read the book
 const readingTime = (body) => {
     const wpm = 225;
@@ -218,6 +274,8 @@ module.exports = {
     getAllBlogs,
     getSingleBlog,
     deleteBlogByUser,
-    upadetBlogbyUser,
+    updateBlogbyUser,
     userBlogs,
+    likeBlogPost,
+    uploadBlogImage,
 };

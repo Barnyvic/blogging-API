@@ -20,6 +20,12 @@ const BlogSchema = new Schema(
         Reading_Time: { type: String },
         Tags: { type: [String] },
         Body: { type: String, require: true },
+        likes: { type: [String], default: [] },
+        image: { type: String, required: false },
+        Comment: {
+            type: [mongoose.Schema.Types.ObjectId],
+            ref: 'COMMENT',
+        },
     },
     { timestamps: true }
 );
