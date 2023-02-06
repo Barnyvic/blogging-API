@@ -1,19 +1,23 @@
 const supertest = require('supertest');
-const UserModel = require('../Model/UserModel');
-const blogModel = require('../Model/BlogModel');
-const mongoose = require('mongoose');
-const app = require('../index');
-const { dbConnection } = require('../database/dbConfig');
+const UserModel = require('../../Model/UserModel');
+const { connect } = require('../dataBase/database');
+const app = require('../../index');
 
 const api = supertest(app);
 
 describe('sign up and login a user', () => {
+    let conn;
+
     beforeAll(async () => {
-        await dbConnection();
+        conn = await connect();
+    });
+
+    afterEach(async () => {
+        await conn.cleanup();
     });
 
     afterAll(async () => {
-        await mongoose.connection.close();
+        await conn.disconnect();
     });
 
     it('should create a new user ', async () => {
