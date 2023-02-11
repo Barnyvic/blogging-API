@@ -9,24 +9,25 @@ class Connection {
         this.connection = null;
     }
 
-    async Connect() {
+    async connect() {
         this.mongoServer = await MongoMemoryServer.create();
-        const mongoUrl = (await this.mongoServer).getUri();
+        const mongoUri = this.mongoServer.getUri();
 
-        this.connection = await mongoose.connect(mongoUrl, {
+        this.connection = await mongoose.connect(mongoUri, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
     }
 
-    async disConnect() {
+    async disconnect() {
         await mongoose.disconnect();
-        await (await this.mongoServer).stop();
+        await this.mongoServer.stop();
     }
 
-    async cleanUp() {
+    async cleanup() {
         const models = Object.keys(this.connection.models);
         const promises = [];
+
         models.map((model) => {
             promises.push(this.connection.models[model].deleteMany({}));
         });

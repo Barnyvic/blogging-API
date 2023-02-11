@@ -1,14 +1,31 @@
 const supertest = require('supertest');
 const { connect } = require('../dataBase/database');
 const app = require('../../index');
+const UserModel = require('../../Model/UserModel');
 
 const api = supertest(app);
 
 describe('Create a blog , get all blogs , delete and update a perticular blog post', () => {
     let conn;
+    let token;
+
+
 
     beforeAll(async () => {
         conn = await connect();
+
+         const loginDetails = {
+             email: 'victor@gmail.com',
+             Password: '1234567',
+         };
+
+        const loginResponse = await api
+            .post('/api/v1/auth/login')
+            .send(loginDetails);
+
+        token = loginResponse.body.token;
+
+
     });
 
     afterEach(async () => {

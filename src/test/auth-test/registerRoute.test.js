@@ -9,24 +9,24 @@ describe('sign up and login a user', () => {
     let conn;
 
     beforeAll(async () => {
-        conn = await connect();
-    });
+        conn = await connect()
+    })
 
     afterEach(async () => {
-        await conn.cleanup();
-    });
+        await conn.cleanup()
+    })
 
     afterAll(async () => {
-        await conn.disconnect();
-    });
+        await conn.disconnect()
+    })
 
     it('should create a new user ', async () => {
         const newUser = {
-            email: 'victor@gmail.com',
-            password: '1234567',
-            firstname: 'Victor',
+            email: 'victor@gmail5.com',
+            password: '12345647',
+            firstname: 'Gift',
             lastname: 'Barny',
-            username: 'Vicky',
+            username: 'Gifty',
             confirmPassword: '1234567',
         };
         const response = await api.post('/api/v1/auth/register').send(newUser);
@@ -37,7 +37,7 @@ describe('sign up and login a user', () => {
 
     it('should log a user in ', async () => {
         const loginDetails = {
-            email: 'victor@gmail.com',
+            email: 'victor@gmail5.com',
             Password: '1234567',
         };
         const response = await api
@@ -50,7 +50,7 @@ describe('sign up and login a user', () => {
 
     it('should return error if incorect password ', async () => {
         const loginDetails = {
-            email: 'victor@gmail.com',
+            email: 'victor@gmail5.com',
             Password: '12345',
         };
         const response = await api
