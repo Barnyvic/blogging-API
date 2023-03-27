@@ -69,16 +69,23 @@ const login = async (req, res, next) => {
             username: user.Username,
         };
 
-        const token = Jwt.sign(payload, process.env.JWT_SECRET, {
+        const accessToken = Jwt.sign(payload, process.env.JWT_SECRET, {
             expiresIn: '1h',
         });
-        res.cookie('accessToken', token, {
-            httpOnly: true,
-        }).send({
-            Token: token,
-            Email: user.Email,
-            Name: `${user.First_Name} ${user.Last_Name}`,
+        const refreshToken = Jwt.sign(payload, process.env.JWT_SECRET, {
+            expiresIn: '3h',
         });
+        res.cookie('accessToken', accessToken, {
+            httpOnly: true,
+        })
+            .res.cookie('refreshToken', refreshToken, {
+                httpOnly: true,
+            })
+            .send({
+                AccessToken: accessToken,
+                Email: user.Email,
+                Name: `${user.First_Name} ${user.Last_Name}`,
+            });
     } catch (error) {
         next(error);
     }
